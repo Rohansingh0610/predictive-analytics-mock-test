@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Predictive Analytics & Machine Learning — Mock Test (Part 2)</title>
+<style>
+  :root{
+    --bg: #f6f5f1;
+    --paper: #ffffff;
+    --ink: #1c2430;
+    --ink-soft: #5b6472;
+    --line: #dfe0d9;
+    --accent: #2f6f6b;
+    --accent-soft: #e4efee;
+    --wrong: #b23a2f;
+    --wrong-soft: #fbe9e7;
+    --correct: #2e7d5b;
+    --correct-soft: #e7f4ee;
+    --skip: #9a8f5f;
+    --skip-soft: #f6f1e2;
+    --mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
+    --sans: 'IBM Plex Sans', 'Segoe UI', sans-serif;
+    --display: 'Newsreader', 'IBM Plex Sans', serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height:1.5;
+    background-image:
+      radial-gradient(circle, rgba(47,111,107,0.08) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+  a { color: inherit; }
+
+  header.hero{
+    padding: 48px 24px 28px;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: left;
+    border-bottom: 1px solid var(--line);
+  }
+  .eyebrow{
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  h1.title{
+    font-family: var(--display);
+    font-weight: 500;
+    font-size: clamp(28px, 4vw, 40px);
+    margin: 0 0 10px;
+    color: var(--ink);
+  }
+  .subtitle{
+    color: var(--ink-soft);
+    font-size: 15px;
+    max-width: 640px;
+  }
+  .meta-row{
+    display:flex;
+    gap: 24px;
+    margin-top: 22px;
+    flex-wrap: wrap;
+  }
+  .meta-item{
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--ink-soft);
+  }
+  .meta-item b{ color: var(--ink); font-weight: 600; }
+
+  .progress-bar-wrap{
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(246,245,241,0.92);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--line);
+    padding: 10px 24px;
+  }
+  .progress-inner{
+    max-width: 900px;
+    margin: 0 auto;
+    display:flex;
+    align-items:center;
+    gap: 14px;
+  }
+  .progress-track{
+    flex:1;
+    height: 6px;
+    background: var(--line);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .progress-fill{
+    height:100%;
+    width:0%;
+    background: var(--accent);
+    transition: width 0.25s ease;
+  }
+  .progress-label{
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+
+  main{
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 30px 24px 120px;
+  }
+
+  .qcard{
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 22px 24px;
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .qnum{
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+  .qtext{
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0 0 14px;
+    color: var(--ink);
+    white-space: pre-line;
+  }
+  .qtext code, .code-inline{
+    font-family: var(--mono);
+    background: var(--accent-soft);
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 0.92em;
+  }
+  .options{
+    display:flex;
+    flex-direction:column;
+    gap: 9px;
+  }
+  .option{
+    display:flex;
+    align-items:flex-start;
+    gap: 10px;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    cursor:pointer;
+    font-size: 14.5px;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .option span {
+    white-space: pre-line;
+  }
+  .option:hover{ border-color: var(--accent); background: var(--accent-soft); }
+  .option input{ margin-top: 3px; accent-color: var(--accent); flex-shrink:0; pointer-events: none; }
+  .option.selected{ border-color: var(--accent); background: var(--accent-soft); }
+
+  .submit-bar{
+    position: sticky;
+    bottom: 0;
+    background: rgba(246,245,241,0.95);
+    backdrop-filter: blur(6px);
+    border-top: 1px solid var(--line);
+    padding: 14px 24px;
+    display:flex;
+    justify-content:center;
+    gap: 12px;
+    z-index: 50;
+  }
+  .submit-btn{
+    font-family: var(--mono);
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    background: var(--ink);
+    color: #fff;
+    border: none;
+    padding: 13px 34px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .submit-btn:hover{ background: var(--accent); }
+  .submit-btn:active{ transform: scale(0.98); }
+  .shuffle-btn{
+    font-family: var(--mono);
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    background: transparent;
+    color: var(--ink);
+    border: 1.5px solid var(--ink);
+    padding: 13px 22px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, transform 0.1s;
+  }
+  .shuffle-btn:hover{ background: var(--accent); color:#fff; border-color: var(--accent); }
+  .shuffle-btn:active{ transform: scale(0.98); }
+
+  /* Results */
+  #results{ display:none; }
+  .results-hero{
+    text-align:center;
+    padding: 20px 0 8px;
+  }
+  .score-ring-wrap{
+    display:flex;
+    justify-content:center;
+    margin: 18px 0 8px;
+  }
+  .score-ring{
+    width: 160px; height:160px;
+    border-radius: 50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    border: 10px solid var(--line);
+    position:relative;
+  }
+  .score-ring .pct{
+    font-family: var(--display);
+    font-size: 34px;
+    font-weight:600;
+    color: var(--ink);
+  }
+  .score-ring .lbl{
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-soft);
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+  }
+  .stat-grid{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin: 28px 0;
+  }
+  @media (max-width: 640px){
+    .stat-grid{ grid-template-columns: repeat(2, 1fr); }
+  }
+  .stat-box{
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    padding: 16px 14px;
+    text-align:center;
+  }
+  .stat-box .num{
+    font-family: var(--display);
+    font-size: 26px;
+    font-weight:600;
+  }
+  .stat-box .lbl{
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 4px;
+  }
+  .stat-box.correct .num{ color: var(--correct); }
+  .stat-box.wrong .num{ color: var(--wrong); }
+  .stat-box.skip .num{ color: var(--skip); }
+
+  .filter-row{
+    display:flex;
+    gap:8px;
+    justify-content:center;
+    margin: 6px 0 26px;
+    flex-wrap:wrap;
+  }
+  .filter-btn{
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 7px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    cursor:pointer;
+    color: var(--ink-soft);
+  }
+  .filter-btn.active{
+    background: var(--ink);
+    color: #fff;
+    border-color: var(--ink);
+  }
+
+  .review-card{
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--line);
+    border-radius: 8px;
+    padding: 18px 20px;
+    margin-bottom: 12px;
+  }
+  .review-card.is-correct{ border-left-color: var(--correct); }
+  .review-card.is-wrong{ border-left-color: var(--wrong); }
+  .review-card.is-skip{ border-left-color: var(--skip); }
+  .review-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .review-qnum{
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+  .badge{
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .badge.is-correct{ background: var(--correct-soft); color: var(--correct); }
+  .badge.is-wrong{ background: var(--wrong-soft); color: var(--wrong); }
+  .badge.is-skip{ background: var(--skip-soft); color: var(--skip); }
+  .review-q{
+    font-size: 15px;
+    font-weight: 500;
+    margin: 0 0 12px;
+    white-space: pre-line;
+  }
+  .review-line{
+    font-size: 13.5px;
+    margin: 5px 0;
+    padding: 8px 10px;
+    border-radius: 6px;
+    white-space: pre-line;
+  }
+  .review-line.your-wrong{ background: var(--wrong-soft); color: var(--wrong); }
+  .review-line.your-correct{ background: var(--correct-soft); color: var(--correct); }
+  .review-line.correct-answer{ background: var(--correct-soft); color: var(--correct); }
+  .review-line .tag{ font-family: var(--mono); font-size: 10.5px; opacity:0.75; margin-right:6px; }
+
+  .retake-btn{
+    display:block;
+    margin: 30px auto 0;
+    font-family: var(--mono);
+    font-size: 13px;
+    background: transparent;
+    border: 1px solid var(--ink);
+    color: var(--ink);
+    padding: 11px 26px;
+    border-radius: 8px;
+    cursor:pointer;
+  }
+  .retake-btn:hover{ background: var(--ink); color: #fff; }
+
+  footer{
+    text-align:center;
+    padding: 30px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-soft);
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="eyebrow">Predictive Modeling / Applied Analytics</div>
+  <h1 class="title">Mock Test — Predictive Analysis &amp; Machine Learning</h1>
+  <p class="subtitle">200 questions covering predictive definitions, analytical hierarchy, data hygiene, preprocessing, supervised models (Linear, Logistic, Decision Trees, Ensembles), metrics, and model evaluation. Answer at your own pace, then submit to view your detailed diagnostic analysis.</p>
+  <div class="meta-row">
+    <div class="meta-item">TOTAL — <b id="metaTotal">200</b> questions</div>
+    <div class="meta-item">MARKING — <b>+1</b> per correct, no negative marking</div>
+    <div class="meta-item">TIME — <b>Untimed</b></div>
+  </div>
+</header>
+
+<div class="progress-bar-wrap">
+  <div class="progress-inner">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label" id="progressLabel">0 / 200 answered</div>
+  </div>
+</div>
+
+<main>
+  <div id="quizContainer"></div>
+
+  <div id="results">
+    <div class="results-hero">
+      <div class="eyebrow" style="text-align:center">Result</div>
+      <h1 class="title" style="font-size:28px;">Your Score Breakdown</h1>
+    </div>
+
+    <div class="score-ring-wrap">
+      <div class="score-ring" id="scoreRing">
+        <div class="pct" id="scorePct">0%</div>
+        <div class="lbl">Score</div>
+      </div>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-box"><div class="num" id="statMarks">0 / 200</div><div class="lbl">Marks</div></div>
+      <div class="stat-box correct"><div class="num" id="statCorrect">0</div><div class="lbl">Correct</div></div>
+      <div class="stat-box wrong"><div class="num" id="statWrong">0</div><div class="lbl">Wrong</div></div>
+      <div class="stat-box skip"><div class="num" id="statSkip">0</div><div class="lbl">Skipped</div></div>
+      <div class="stat-box"><div class="num" id="statAttempted">0</div><div class="lbl">Attempted</div></div>
+      <div class="stat-box"><div class="num" id="statPercent">0%</div><div class="lbl">Percentage</div></div>
+      <div class="stat-box"><div class="num" id="statAccuracy">0%</div><div class="lbl">Accuracy</div></div>
+      <div class="stat-box"><div class="num" id="statTotal">200</div><div class="lbl">Total Qs</div></div>
+    </div>
+
+    <div class="filter-row">
+      <button class="filter-btn active" data-filter="all">All (200)</button>
+      <button class="filter-btn" data-filter="wrong">Wrong <span id="cntWrong"></span></button>
+      <button class="filter-btn" data-filter="correct">Correct <span id="cntCorrect"></span></button>
+      <button class="filter-btn" data-filter="skip">Skipped <span id="cntSkip"></span></button>
+    </div>
+
+    <div id="reviewList"></div>
+
+    <button class="retake-btn" id="retakeBtn">Retake test</button>
+  </div>
+</main>
+
+<div class="submit-bar" id="submitBar">
+  <button class="shuffle-btn" id="shuffleBtn">🔀 Shuffle</button>
+  <button class="submit-btn" id="submitBtn">Submit Test</button>
+</div>
+
+<footer>Generated mock test · Predictive Analysis &amp; Machine Learning · 200 questions</footer>
+
+<script id="quiz-data" type="application/json">
+[
+  {"question":"What is the formal definition of predictive analysis?","options":["The process of recording and archiving real-time database transactions","The process of using historical and current data, statistical techniques, and machine learning algorithms to predict future or unknown outcomes","The visualization of past organizational expenses using business intelligence dashboards","The manual entry and cleaning of unstructured enterprise records"],"answer":1},
+  {"question":"In simple terms, predictive analysis is best described as:","options":["Using past data to make predictions about what is likely to happen","Writing database queries to summarize last year's revenue","Designing graphic user interfaces for data entry forms","Setting up automated cloud backups for enterprise databases"],"answer":0},
+  {"question":"Which of the following is an example of predictive analysis?","options":["Counting the number of employees present today","Using past sales data to forecast next quarter's sales","Generating monthly electricity utility bills","Formatting a balance sheet for an annual audit"],"answer":1},
+  {"question":"How is \"predictive analytics\" generally distinguished from \"predictive analysis\" in the broader discipline?","options":["Predictive analytics is strictly limited to linear algebra formulas","Predictive analytics is the broader discipline encompassing statistics, machine learning, data mining, preprocessing, and business decision-making","Predictive analysis requires no data preprocessing, whereas predictive analytics does","Predictive analytics refers only to manual pen-and-paper calculations"],"answer":1},
+  {"question":"Which analytical type answers the question: \"What happened?\"","options":["Prescriptive analysis","Diagnostic analysis","Descriptive analysis","Predictive analysis"],"answer":2},
+  {"question":"\"Sales were ₹50 lakh last month\" is an example of which type of analysis?","options":["Predictive analysis","Descriptive analysis","Prescriptive analysis","Diagnostic analysis"],"answer":1},
+  {"question":"Which analytical type answers the question: \"Why did it happen?\"","options":["Diagnostic analysis","Descriptive analysis","Predictive analysis","Prescriptive analysis"],"answer":0},
+  {"question":"\"Sales decreased because customer demand dropped\" is an example of:","options":["Prescriptive analysis","Diagnostic analysis","Descriptive analysis","Predictive analysis"],"answer":1},
+  {"question":"Which analytical type answers the question: \"What will probably happen?\"","options":["Diagnostic analysis","Descriptive analysis","Prescriptive analysis","Predictive analysis"],"answer":3},
+  {"question":"\"Sales are expected to decrease by 8% next month\" represents:","options":["Predictive analysis","Descriptive analysis","Diagnostic analysis","Prescriptive analysis"],"answer":0},
+  {"question":"Which analytical type answers the question: \"What should we do?\"","options":["Prescriptive analysis","Predictive analysis","Diagnostic analysis","Descriptive analysis"],"answer":0},
+  {"question":"\"Increase advertising spending in Region A\" is an example of:","options":["Predictive analysis","Prescriptive analysis","Descriptive analysis","Diagnostic analysis"],"answer":1},
+  {"question":"What is the correct progressive order of the four types of data analytics?","options":["Predictive → Prescriptive → Descriptive → Diagnostic","Descriptive → Diagnostic → Predictive → Prescriptive","Diagnostic → Descriptive → Prescriptive → Predictive","Descriptive → Predictive → Diagnostic → Prescriptive"],"answer":1},
+  {"question":"What primary advantage does predictive analysis provide over traditional analysis?","options":["It eliminates the need for computing hardware","It enables organizations to make proactive rather than reactive decisions","It guarantees 100% error-free business forecasts","It completely replaces the need for human managers"],"answer":1},
+  {"question":"Predicting whether a customer is likely to default on a loan is an application of predictive analysis in:","options":["Customer retention","Risk management","Resource planning","Inventory storage"],"answer":1},
+  {"question":"Flagging a financial transaction with an unusual location and abnormally high amount is an application of:","options":["Churn prediction","Fraud detection","Inventory forecasting","Resource scheduling"],"answer":1},
+  {"question":"What is \"churn prediction\" in the context of customer relationship management?","options":["Predicting whether a customer will leave a service or company","Predicting the exact time a customer visits a physical store","Calculating total manufacturing costs of goods sold","Predicting employee retirement ages"],"answer":0},
+  {"question":"Which of the following is a direct healthcare application of predictive modeling?","options":["Printing medical insurance cards","Predicting patient deterioration, disease risk, and hospital readmission","Designing ergonomic hospital beds","Calculating doctor consulting fees"],"answer":1},
+  {"question":"In marketing, predictive analysis is frequently used to estimate:","options":["Customer lifetime value and purchase likelihood","Server electricity consumption","Standard office stationery usage","Network cable bandwidth limits"],"answer":0},
+  {"question":"Predicting future electricity consumption, staffing needs, and inventory requirements falls under:","options":["Fraud management","Resource planning","Churn prediction","Descriptive reporting"],"answer":1},
+  {"question":"What is the correct sequence of the data-driven decision process?","options":["Decision → Action → Data → Prediction → Risk assessment","Data → Prediction → Risk assessment → Decision → Action","Prediction → Data → Action → Risk assessment → Decision","Action → Data → Decision → Prediction → Risk assessment"],"answer":1},
+  {"question":"What is the true role of predictive analysis in organizational decision-making?","options":["It automatically executes all executive decisions without human oversight","It provides data-driven estimates and insights that assist humans or automated systems in making decisions","It removes all business risks completely","It converts non-profit organizations into commercial entities"],"answer":1},
+  {"question":"Why is \"relevance\" a critical characteristic of predictive data?","options":["All features must be recorded in alphabetical order","Features included in the model must have a meaningful relationship with the target variable","Datasets must only contain numerical integers","Data must be collected using only open-source software"],"answer":1},
+  {"question":"If an employee's recorded age in a dataset is 250 years, which data quality characteristic is violated?","options":["Completeness","Accuracy","Consistency","Timeliness"],"answer":1},
+  {"question":"If crucial columns like Income contain empty cells across multiple rows, the dataset suffers from a lack of:","options":["Completeness","Consistency","Timeliness","Relevance"],"answer":0},
+  {"question":"Having entries recorded as \"Male\", \"M\", and \"1\" in the same gender column without standardization violates:","options":["Completeness","Timeliness","Consistency","Quantity"],"answer":2},
+  {"question":"Using stock market transaction data from 20 years ago to predict today's high-frequency trading prices violates:","options":["Completeness","Timeliness","Consistency","Relevance"],"answer":1},
+  {"question":"Why does having \"10 million garbage records\" fail to improve a predictive model?","options":["Machine learning models can only accept up to 1,000 rows","Large data volume cannot compensate for poor quality, irrelevant, or inaccurate data","Algorithms automatically ignore datasets larger than 1 GB","More data always degrades computational precision"],"answer":1},
+  {"question":"What happens if every observation in a dataset has the exact same feature value?","options":["The model learns the underlying patterns instantly","The model has no variability to learn relationships between features and target","Model accuracy reaches 100%","The model automatically switches to unsupervised clustering"],"answer":1},
+  {"question":"If a credit risk model is trained exclusively on data from individuals aged 18–25, what issue arises when predicting risk for a 70-year-old?","options":["The data violates the representative data characteristic","The data violates the ordinal scale condition","The model encounters zero-division errors","The model runs out of system memory"],"answer":0},
+  {"question":"Which of the following is an example of continuous numerical data?","options":["Number of children in a household","Number of customer complaints","Temperature and salary","Blood group"],"answer":2},
+  {"question":"Which of the following is an example of discrete numerical data?","options":["Height of a tree","Weight of a package","Exact ambient room temperature","Number of products purchased in an order"],"answer":3},
+  {"question":"Categorical data is best exemplified by:","options":["Temperature in Celsius","City of residence and blood group","Salary in rupees","Age in completed years"],"answer":1},
+  {"question":"Data that can take on exactly two possible outcomes (e.g., Yes/No, Pass/Fail) is termed:","options":["Ordinal data","Continuous data","Binary data","Multi-class data"],"answer":2},
+  {"question":"A satisfaction rating categorized as \"Poor < Average < Good < Excellent\" is classified as:","options":["Nominal categorical data","Ordinal data","Continuous numerical data","Time-series data"],"answer":1},
+  {"question":"A dataset recording company sales on the first day of every month from 2020 to 2025 is:","options":["Time-series data","Binary data","Unstructured text data","Ordinal data"],"answer":0},
+  {"question":"In predictive modeling, the input variables used to make predictions are known as:","options":["Target variables","Features (or independent variables)","Hyperparameters","Residuals"],"answer":1},
+  {"question":"In a house price prediction problem with features like Area, Bedrooms, and Age, the House Price is the:","options":["Hyperparameter","Target variable (or dependent variable)","Categorical predictor","Residual error"],"answer":1},
+  {"question":"In standard mathematical notation for predictive models, what do X and Y represent?","options":["X = Target, Y = Features","X = Features, Y = Target","X = Model Parameters, Y = Loss Function","X = Residuals, Y = Predictions"],"answer":1},
+  {"question":"What mathematical relationship does a supervised predictive model attempt to learn?","options":["X = f(Y)","Y = f(X)","f(X, Y) = 0","Y = X^2 + f(Y)"],"answer":1},
+  {"question":"What is the standard order of stages in the predictive analysis pipeline?","options":["Model Selection → Data Collection → Data Cleaning → Prediction","Define Problem → Collect Data → Clean Data → Explore Data → Split Data → Select Model → Train → Evaluate → Tune → Interpret → Deploy","Train Model → Split Data → Collect Data → Deploy → Evaluate","Hyperparameter Tuning → Model Training → Data Cleaning → Problem Definition"],"answer":1},
+  {"question":"Which stage of the pipeline focuses on gathering data from sources like sensors, APIs, databases, and logs?","options":["Data Transformation","Data Collection","Hyperparameter Tuning","Model Evaluation"],"answer":1},
+  {"question":"The process of converting raw, messy data into a clean and suitable form for machine learning is called:","options":["Data preprocessing","Hyperparameter optimization","Model inferencing","Decision boundary mapping"],"answer":0},
+  {"question":"Which algorithm is best suited for predicting a continuous numerical value like house price?","options":["Logistic Regression","Linear Regression","Binary Decision Classifier","One-Hot Encoder"],"answer":1},
+  {"question":"Which algorithm is designed specifically for predicting a discrete categorical class?","options":["Simple Linear Regression","Logistic Regression","Mean Squared Error","Ordinary Least Squares"],"answer":1},
+  {"question":"What does \"model training\" mean in predictive analysis?","options":["Writing software code comments for database documentation","Allowing an algorithm to learn patterns and relationships from historical training data","Manually calculating the standard deviation of features","Compressing large CSV files into zip archives"],"answer":1},
+  {"question":"If a trained model learns the equation Marks = 8(Hours) + 20, what is the predicted mark for a student who studies 5 hours?","options":["40","60","55","68"],"answer":1},
+  {"question":"Why is model evaluation on unseen data critical?","options":["To ensure the model performs accurately on new data rather than just memorizing training data","To convert categorical variables into binary numbers","To reduce the file size of the dataset","To eliminate the need for hyperparameter tuning"],"answer":0},
+  {"question":"If a model trained on historical hiring data reproduces discrimination against a demographic group, it exhibits:","options":["High variance","Algorithmic bias","Over-regularization","Data normalization"],"answer":1},
+  {"question":"Ensuring predictive models do not unfairly discriminate against protected groups relates to which ethical pillar?","options":["Fairness","Timeliness","Computational efficiency","Feature scaling"],"answer":0},
+  {"question":"Protecting sensitive personal identifiers and medical records in predictive pipelines addresses:","options":["Data Privacy","Model Convergence","Underfitting","Feature Selection"],"answer":0},
+  {"question":"Allowing users to understand what data was used and why a specific prediction was made reflects:","options":["Model transparency (explainability)","Data imputation","Synthetic oversampling","Variance reduction"],"answer":0},
+  {"question":"Ensuring an individual or organization is held responsible for predictive outcomes addresses:","options":["Accountability","Multicollinearity","Normalization","Bagging"],"answer":0},
+  {"question":"Ensuring that datasets and predictive models are safeguarded against unauthorized access and cyber threats is:","options":["Data Security","Bivariate Analysis","Forward Fill","Stratification"],"answer":0},
+  {"question":"Collecting and using user data in compliance with legal regulations and user permissions satisfies:","options":["Consent","Feature engineering","Tree pruning","Regularization"],"answer":0},
+  {"question":"Detecting and correcting inaccurate, incomplete, inconsistent, duplicate, or irrelevant data is defined as:","options":["Data cleaning","Exploratory visualization","Gradient descent","Cross-validation"],"answer":0},
+  {"question":"Which of the following is a common cause of missing values in real-world datasets?","options":["Perfect database normalization","Sensor failure or non-response by a survey user","High correlation between features","Excessive training epochs"],"answer":1},
+  {"question":"What is the main disadvantage of handling missing data by deleting rows?","options":["It increases model variance drastically","Valuable information is permanently lost, which can severely damage small datasets","It introduces non-linear decision boundaries","It converts continuous variables into categorical variables"],"answer":1},
+  {"question":"For values 10, 20, 30, and 40, what value will replace a missing entry under mean imputation?","options":["20","25","30","35"],"answer":1},
+  {"question":"Why is median imputation preferred over mean imputation when a feature contains extreme outliers?","options":["The mean is heavily distorted by extreme values, whereas the median is robust to outliers","The median always produces an integer value","The median automatically scales data between 0 and 1","The mean cannot be computed for continuous variables"],"answer":0},
+  {"question":"What is the median of the dataset: 10, 20, 30, 40, 1000?","options":["220","30","40","1000"],"answer":1},
+  {"question":"Which missing value imputation technique is standard for categorical features?","options":["Mean imputation","Median imputation","Mode imputation","Min-Max scaling"],"answer":2},
+  {"question":"In a time-series temperature log, if 10:00 is 25°C and 11:00 is missing, what does forward fill assign to 11:00?","options":["25°C","0°C","27°C","The average of the entire day"],"answer":0},
+  {"question":"In time-series data, replacing a missing value with the next known future value is known as:","options":["Forward fill","Backward fill","Mode replacement","Z-score capping"],"answer":1},
+  {"question":"Using an auxiliary machine learning algorithm to estimate and fill in missing values is called:","options":["Predictive imputation","Random deletion","Median scaling","One-hot imputation"],"answer":0},
+  {"question":"An observation that differs substantially from the general pattern of the data is known as an:","options":["Outlier","Imputation","Hyperparameter","Epoch"],"answer":0},
+  {"question":"In the series 10, 12, 11, 13, 12, 100, which number is the outlier?","options":["10","12","13","100"],"answer":3},
+  {"question":"How do outliers negatively impact machine learning models?","options":["They prevent one-hot encoding from executing","They distort sample means, increase error variance, and pull regression lines away from the true trend","They convert supervised learning problems into unsupervised problems","They reduce the number of features in the dataset"],"answer":1},
+  {"question":"Which visualization tool is specifically designed to identify quartiles, spread, and outliers?","options":["Pie chart","Box plot","Line chart","Scatter matrix"],"answer":1},
+  {"question":"What is the formula for the Interquartile Range (IQR)?","options":["IQR = Q1 + Q3","IQR = Q3 - Q1","IQR = (Q3 - Q1) / 2","IQR = Q2 - Q1"],"answer":1},
+  {"question":"According to the IQR rule, an observation x is flagged as an outlier if:","options":["x < Q1 - 1.5(IQR) or x > Q3 + 1.5(IQR)","x < Q1 - 3(IQR) or x > Q3 + 3(IQR)","x < Mean - 1.5(Std)","x > Q2 + 1.5(IQR)"],"answer":0},
+  {"question":"What is the mathematical formula for computing a Z-score?","options":["Z = (x - μ) / σ","Z = (x - σ) / μ","Z = (μ - x) / σ^2","Z = (x - Q1) / IQR"],"answer":0},
+  {"question":"In standard practice, an observation is often considered an extreme outlier using Z-score if:","options":["|Z| > 1","|Z| > 3","Z = 0","|Z| < 0.5"],"answer":1},
+  {"question":"When an outlier represents a verified, legitimate high-value customer (e.g., a billionaire's income), what should be done?","options":["Automatically delete the record as an error","Keep or transform it appropriately, as it represents a valid real-world observation","Replace the value with zero","Convert the feature to binary format"],"answer":1},
+  {"question":"Random errors or meaningless variations that obscure the underlying data pattern are referred to as:","options":["Noise","Target variables","Hyperparameters","Ensembles"],"answer":0},
+  {"question":"A sensor repeatedly reporting 25°C, suddenly reading 89°C for one second, and then returning to 25.2°C is an example of:","options":["Perfect variance","Sensor noise / malfunction","Linear trend","One-hot encoding"],"answer":1},
+  {"question":"Which technique is commonly used to reduce noise in numerical data?","options":["Data binning and smoothing","Increasing model tree depth","Removing target labels","Random label flipping"],"answer":0},
+  {"question":"Converting data from its original representation into a form better suited for modeling is called:","options":["Data transformation","Data leakage","Overfitting","Bagging"],"answer":0},
+  {"question":"Why is feature scaling necessary for algorithms sensitive to variable magnitudes?","options":["It prevents variables with large scales from dominating variables with smaller scales","It converts all non-linear relationships into strictly linear ones","It deletes all redundant features automatically","It converts continuous numbers into string categories"],"answer":0},
+  {"question":"What is the formula for Min-Max Normalization?","options":["x' = (x - x_min) / (x_max - x_min)","x' = (x - μ) / σ","x' = (x - x_mean) / x_max","x' = (x_max - x) / x_min"],"answer":0},
+  {"question":"Min-Max normalization typically scales feature values into which numerical range?","options":["-1 to +1","0 to 1","0 to 100","-∞ to +∞"],"answer":1},
+  {"question":"Given x_min = 10, x_max = 50, what is the Min-Max normalized value for x = 30?","options":["0.25","0.50","0.75","0.40"],"answer":1},
+  {"question":"What are the resulting mean and standard deviation after applying standardization (Z-score scaling)?","options":["Mean = 1, Standard Deviation = 0","Mean = 0, Standard Deviation = 1","Mean = 0, Standard Deviation = 0","Mean = 0.5, Standard Deviation = 0.5"],"answer":1},
+  {"question":"What is a key difference between Min-Max Normalization and Standardization?","options":["Normalization bounds data typically between 0 and 1, whereas standardization centers data around mean 0 with unit variance","Standardization is strictly for categorical data, normalization is for numerical data","Normalization is completely unaffected by extreme outliers","Standardization guarantees all values are strictly positive"],"answer":0},
+  {"question":"Why must categorical text variables be encoded before training machine learning models?","options":["Machine learning algorithms operate mathematically on numerical data","Categorical variables cannot be visualized on bar charts","To remove all variance from the target column","Text data causes infinite loop errors in CPU registers"],"answer":0},
+  {"question":"Assigning values: Red → 0, Blue → 1, Green → 2 is an example of:","options":["Label Encoding","One-Hot Encoding","Target Imputation","Standardization"],"answer":0},
+  {"question":"What is the primary drawback of applying Label Encoding to nominal variables like colors?","options":["It increases dataset dimensionality exponentially","Algorithms may infer a non-existent numerical order (e.g., Green > Blue > Red)","It replaces all numbers with missing values","It requires calculating the mean and standard deviation"],"answer":1},
+  {"question":"Which encoding technique creates separate binary (0 or 1) indicator columns for each distinct category?","options":["Label Encoding","One-Hot Encoding","Ordinal Scaling","Min-Max Transformation"],"answer":1},
+  {"question":"If a categorical feature Device has categories [Mobile, Desktop, Tablet], how many binary columns will standard One-Hot Encoding generate?","options":["1","2","3","6"],"answer":2},
+  {"question":"The process of creating, transforming, or extracting new informative features from raw data is called:","options":["Feature engineering","Feature deletion","Hyperparameter tuning","Cross-validation"],"answer":0},
+  {"question":"Calculating Age = CurrentYear - BirthYear from raw date inputs is an example of:","options":["Model Evaluation","Feature Engineering","One-Hot Encoding","Cross-Validation"],"answer":1},
+  {"question":"Computing BMI = Weight / Height^2 from separate height and weight features represents:","options":["Feature Engineering","Dimensionality reduction through PCA","Label encoding","Diagnostic reporting"],"answer":0},
+  {"question":"What is the fundamental difference between Feature Selection and Feature Engineering?","options":["Feature selection creates brand new variables; feature engineering removes noisy rows","Feature selection picks the best existing features; feature engineering creates new features from data","Feature selection is unsupervised; feature engineering is always supervised","Feature selection scales numbers; feature engineering standardizes categories"],"answer":1},
+  {"question":"Why do practitioners split data into Training and Testing sets?","options":["To compress the dataset for faster cloud transmission","To evaluate how well the trained model generalizes to new, unseen observations","To ensure the training set contains no missing values","To convert classification problems into regression problems"],"answer":1},
+  {"question":"In an 80/20 train-test split, what percentage of the data is used to fit the model parameters?","options":["20%","50%","80%","100%"],"answer":2},
+  {"question":"What is the dedicated role of a Validation Set in a three-way split (Train/Validation/Test)?","options":["Final unbiased evaluation after deployment","Tuning hyperparameters and selecting the best model configuration","Imputing missing values in the test set","Cleaning raw outliers from the database"],"answer":1},
+  {"question":"In K-Fold Cross-Validation with K = 5, how many total training and validation rounds are performed?","options":["1","5","10","25"],"answer":1},
+  {"question":"How is the final performance score computed in K-Fold Cross-Validation?","options":["By selecting only the single highest score among all folds","By calculating the average score across all K validation folds","By multiplying the scores of all folds together","By evaluating the model on the training fold exclusively"],"answer":1},
+  {"question":"Which of the following is a major advantage of K-Fold Cross-Validation over a single train-test split?","options":["It eliminates the need for data cleaning","It makes better use of limited data and provides a more reliable performance estimate","It allows decision trees to train in zero seconds","It completely prevents class imbalance from occurring"],"answer":1},
+  {"question":"Exploratory Data Analysis (EDA) is defined as:","options":["Examining, summarizing, and visualizing data to understand structure, patterns, relationships, and anomalies","Deploying predictive machine learning APIs into production servers","Optimizing the learning rate parameter in gradient boosting","Writing SQL insert scripts for clean datasets"],"answer":0},
+  {"question":"Analyzing the summary statistics and distribution of a single variable (such as Age) is called:","options":["Univariate analysis","Bivariate analysis","Multivariate analysis","Residual analysis"],"answer":0},
+  {"question":"Examining the relationship between Study Hours and Exam Marks simultaneously is an example of:","options":["Univariate analysis","Bivariate analysis","Cross-validation","Stratified sampling"],"answer":1},
+  {"question":"Analyzing correlations across attendance, study hours, past marks, and assignments simultaneously is called:","options":["Univariate analysis","Multivariate analysis","Single-node tree splitting","Binary classification"],"answer":1},
+  {"question":"Which visual chart displays the distribution, spread, central tendency, and skewness of a numerical variable?","options":["Histogram","Pie chart","Binary flow chart","Confusion matrix"],"answer":0},
+  {"question":"A scatter plot is primarily used to investigate:","options":["Missing value counts in database tables","The relationship between two continuous numerical variables","The exact frequency of categories in text columns","The sequence of tree pruning steps"],"answer":1},
+  {"question":"What does Pearson’s correlation coefficient (r) measure?","options":["The non-linear polynomial curvature between categorical variables","The strength and direction of the linear relationship between two numerical variables","The ratio of false positives to true negatives","The computational runtime of regression models"],"answer":1},
+  {"question":"What is the mathematical range of the Pearson correlation coefficient (r)?","options":["0 ≤ r ≤ 1","-1 ≤ r ≤ 1","-∞ ≤ r ≤ +∞","-100 ≤ r ≤ 100"],"answer":1},
+  {"question":"A Pearson correlation coefficient of r = -1 indicates:","options":["No relationship whatsoever","A perfect negative linear relationship","A perfect positive linear relationship","Severe model underfitting"],"answer":1},
+  {"question":"What does a Pearson correlation coefficient of r = 0 signify?","options":["Perfect predictive accuracy","No linear correlation between the two variables","Infinite variance in the dataset","An inverse quadratic relationship"],"answer":1},
+  {"question":"Why does correlation not imply causation?","options":["Two variables may change together due to a third confounding factor without one directly causing the other","Correlation coefficients cannot be calculated on real data","Causation only applies to categorical binary targets","Correlation only measures non-linear dependencies"],"answer":0},
+  {"question":"A dataset containing 99,000 normal transactions and 1,000 fraudulent transactions is an example of:","options":["An imbalanced dataset","A continuous regression dataset","An ordinal target dataset","A standardized normal distribution"],"answer":0},
+  {"question":"Why is classification accuracy a misleading metric for highly imbalanced datasets?","options":["Accuracy cannot be calculated when fractions exist","A naive model predicting only the majority class achieves high accuracy while failing completely on the minority class","Accuracy is exclusively reserved for regression algorithms","Accuracy values change depending on whether min-max scaling is used"],"answer":1},
+  {"question":"What is random oversampling?","options":["Removing rows from the majority class","Duplicating randomly selected instances from the minority class to balance class distribution","Generating linear regression lines on test data","Converting continuous targets into categories"],"answer":1},
+  {"question":"What is random undersampling?","options":["Decreasing the number of instances from the majority class to balance class proportions","Adding synthetic data to the majority class","Deleting outlier columns from the training set","Replacing missing values with the mode"],"answer":0},
+  {"question":"What does the acronym SMOTE stand for?","options":["Standard Mean Optimization Technique for Ensembles","Synthetic Minority Over-sampling Technique","Sequential Multi-Objective Tree Evaluation","Systematic Majority Over-sampling Training Engine"],"answer":1},
+  {"question":"How does SMOTE generate new training instances?","options":["By creating synthetic minority examples interpolated between existing neighboring minority samples","By duplicating majority class instances verbatim","By dropping 50% of the independent features","By applying logarithmic transformations to the target variable"],"answer":0},
+  {"question":"How does using \"class weights\" help manage class imbalance during training?","options":["It assigns a higher loss penalty to prediction errors made on the minority class","It physically deletes rows belonging to the majority class","It standardizes feature weights to sum to 1.0","It restricts decision trees to a single split"],"answer":0},
+  {"question":"What is the formal definition of Supervised Learning?","options":["An algorithm clustering unlabelled records based on geometric distances","A machine learning approach where a model learns a mapping between input features and known target outputs using labeled data","An autonomous system that discovers rules without human intervention or targets","A database indexing technique to accelerate query execution"],"answer":1},
+  {"question":"What is the fundamental difference between Regression and Classification?","options":["Regression predicts continuous numerical values; Classification predicts categorical labels","Regression uses decision trees; Classification uses only neural networks","Regression works without target labels; Classification requires labeled inputs","Regression is evaluated with accuracy; Classification is evaluated with MSE"],"answer":0},
+  {"question":"Which of the following is a classification task?","options":["Predicting house sale prices","Predicting tomorrow's exact temperature in degrees Celsius","Classifying an email as Spam or Not Spam","Forecasting company revenue for the next fiscal year"],"answer":2},
+  {"question":"What is the mathematical form of a simple linear regression model?","options":["ŷ = β0 + β1*x","ŷ = 1 / (1 + e^-x)","ŷ = -∑ p_i * log2(p_i)","ŷ = β0 * β1^x"],"answer":0},
+  {"question":"In the linear regression equation ŷ = β0 + β1*x, what do β0 and β1 represent?","options":["β0 = Slope, β1 = Intercept","β0 = Intercept, β1 = Slope (coefficient)","β0 = Error, β1 = Target","β0 = Variance, β1 = Bias"],"answer":1},
+  {"question":"If a multiple linear regression model is given by Price = 50 + 20(Area) + 10(Bedrooms), what is the predicted price for Area = 3 and Bedrooms = 2?","options":["110","130","120","80"],"answer":1},
+  {"question":"How does standard Linear Regression estimate its optimal parameters (β coefficients)?","options":["By maximizing the Gini impurity of feature splits","By minimizing the Mean Squared Error (MSE) between actual and predicted target values","By iteratively pruning leaf nodes","By maximizing the learning rate η"],"answer":1},
+  {"question":"Which of the following is a recognized advantage of Linear Regression?","options":["It can easily model complex multi-modal non-linear distributions without feature transformation","It is computationally fast, simple to implement, and highly interpretable","It is completely immune to the presence of extreme outliers","It never suffers from multicollinearity"],"answer":1},
+  {"question":"A major limitation of Linear Regression is that it:","options":["Cannot accept continuous numerical inputs","Assumes a linear relationship between features and target and is sensitive to outliers","Cannot be evaluated using mathematical error metrics","Always overfits on small datasets"],"answer":1},
+  {"question":"Despite having \"regression\" in its name, Logistic Regression is primarily used for:","options":["Continuous price estimation","Classification tasks","Clustering unlabelled spatial points","Dimensionality reduction"],"answer":1},
+  {"question":"What is the mathematical formula for the Sigmoid (logistic) function?","options":["σ(z) = 1 / (1 + e^-z)","σ(z) = (1 - e^-z) / 2","σ(z) = e^z / (1 - e^z)","σ(z) = 1 / (1 - e^-z)"],"answer":0},
+  {"question":"The output range of the Sigmoid function is strictly between:","options":["-1 and +1","0 and 1","-∞ and +∞","0 and 100"],"answer":1},
+  {"question":"In binary logistic regression, if the default decision threshold is 0.5 and P(Y=1) = 0.85, the predicted class is:","options":["0 (Negative)","1 (Positive)","Undefined","Outlier"],"answer":1},
+  {"question":"If z = 0 in the logistic regression equation, what is the output probability σ(z)?","options":["0.0","0.5","1.0","0.25"],"answer":1},
+  {"question":"What type of decision boundary does a standard Logistic Regression model construct in feature space?","options":["Linear decision boundary","Circular decision boundary","Parabolic decision boundary","Discontinuous step-function boundary"],"answer":0},
+  {"question":"How does a Decision Tree make predictions on input data?","options":["By recursively splitting data according to feature-based decision rules","By calculating the Euclidean distance to the nearest centroid","By fitting a continuous hyperplane via least squares","By computing the harmonic mean of feature vectors"],"answer":0},
+  {"question":"In a Decision Tree structure, what is the topmost decision point called?","options":["Leaf node","Root node","Branch","Pruned terminal"],"answer":1},
+  {"question":"In a Decision Tree, terminal nodes that output the final prediction are called:","options":["Internal nodes","Root nodes","Leaf nodes","Splits"],"answer":2},
+  {"question":"What is the mathematical formula for Entropy in a dataset with class probabilities p_i?","options":["Entropy = -∑ p_i * log2(p_i)","Entropy = 1 - ∑ p_i^2","Entropy = ∑ p_i * (1 - p_i)","Entropy = -∑ p_i^2 * log2(p_i)"],"answer":0},
+  {"question":"If a node in a binary classification tree contains observations belonging exclusively to a single class (100% pure), its entropy is:","options":["1.0","0.5","0","∞"],"answer":2},
+  {"question":"How is Information Gain mathematically defined for a split?","options":["IG = Entropy(children) - Entropy(parent)","IG = Entropy(parent) - WeightedEntropy(children)","IG = Gini(parent) * Entropy(children)","IG = Entropy(parent) / WeightedEntropy(children)"],"answer":1},
+  {"question":"What is the formula for Gini Impurity?","options":["Gini = 1 - ∑ p_i^2","Gini = -∑ p_i * log2(p_i)","Gini = ∑ (1 - p_i)^2","Gini = 1 - ∑ p_i"],"answer":0},
+  {"question":"A perfectly pure node containing only one class has a Gini Impurity of:","options":["0","0.5","1.0","-1.0"],"answer":0},
+  {"question":"What is a primary disadvantage of unconstrained, deep Decision Trees?","options":["They cannot handle categorical features","They are highly prone to overfitting and can be unstable with small data variations","They require data to be normally distributed","They take days to train on small datasets"],"answer":1},
+  {"question":"Random Forest is best described as an ensemble learning method that:","options":["Sequentially trains linear models on prediction residuals","Combines predictions from multiple decision trees to improve generalization and reduce overfitting","Uses a single decision tree with infinite depth","Replaces decision nodes with logistic activation functions"],"answer":1},
+  {"question":"How does a Random Forest combine predictions for a classification task?","options":["By averaging prediction probabilities","By majority voting across all individual trees","By taking the prediction of the deepest tree only","By applying the sigmoid function to the root node"],"answer":1},
+  {"question":"How does a Random Forest aggregate individual tree outputs for a regression task?","options":["By averaging the predictions of all trees","By selecting the maximum predicted value","By majority voting","By computing the median absolute error"],"answer":0},
+  {"question":"What are the two primary sources of randomness in a Random Forest algorithm?","options":["Random learning rate and random weight initialization","Bootstrap sampling of training data and random feature subset selection at each split","Random number of target labels and random train-test splitting","Random imputation of missing values and random box plotting"],"answer":1},
+  {"question":"What does \"bootstrap sampling\" mean in Random Forest?","options":["Sampling data observations uniformly with replacement","Deleting 50% of the dataset at random without replacement","Normalizing features between 0 and 1 randomly","Training only on outlier observations"],"answer":0},
+  {"question":"A primary advantage of Random Forest over a single Decision Tree is:","options":["Lower variance and reduced risk of overfitting","Complete mathematical transparency on pen and paper","Zero memory consumption","Linear computational complexity of O(1)"],"answer":0},
+  {"question":"What is the fundamental operational principle of Gradient Boosting?","options":["Building an ensemble of independent trees simultaneously in parallel","Sequentially building models where each new weak learner attempts to correct the errors/residuals of previous models","Finding the single hyperplane that maximizes margin distance","Applying majority voting to independent neural networks"],"answer":1},
+  {"question":"In Gradient Boosting, the base individual models are typically:","options":["Deep neural networks","Weak learners, commonly shallow decision trees","Support vector machines with RBF kernels","Multi-layer perceptrons"],"answer":1},
+  {"question":"In the gradient boosting update equation F_m(x) = F_{m-1}(x) + η * h_m(x), what does η represent?","options":["Tree depth","Learning rate","Gini impurity","Information gain"],"answer":1},
+  {"question":"What is the impact of choosing a very small learning rate in Gradient Boosting?","options":["Learning is slower, generally requiring more trees, but can improve model generalization","Training converges instantly in one iteration","The model severely overfits on the first shallow tree","It converts the ensemble into a single linear regression"],"answer":0},
+  {"question":"What is a core structural difference between Random Forest and Gradient Boosting?","options":["Random Forest builds trees independently (Bagging); Gradient Boosting builds trees sequentially (Boosting)","Random Forest reduces bias; Gradient Boosting exclusively reduces variance","Random Forest cannot do classification; Gradient Boosting cannot do regression","Random Forest is strictly sequential; Gradient Boosting is fully parallel"],"answer":0},
+  {"question":"What is the formula for Mean Squared Error (MSE)?","options":["MSE = (1/n) * ∑ (y_i - ŷ_i)^2","MSE = (1/n) * ∑ |y_i - ŷ_i|","MSE = √[(1/n) * ∑ (y_i - ŷ_i)^2]","MSE = ∑ (y_i - ȳ)^2"],"answer":0},
+  {"question":"If actual values are [10, 20, 30] and predictions are [12, 18, 33], what is the MSE?","options":["5.67","17.00","2.33","7.25"],"answer":0},
+  {"question":"Why does Mean Squared Error (MSE) penalize large errors more heavily than small errors?","options":["It squares each individual error term before averaging","It takes the absolute square root of errors","It multiplies the error by the learning rate","It divides errors by the sample variance"],"answer":0},
+  {"question":"What does the Coefficient of Determination (R²) measure?","options":["The proportion of variance in the target variable explained by the model","The exact percentage of true positive classification outcomes","The total runtime required to train a linear model","The degree of multicollinearity among input predictors"],"answer":0},
+  {"question":"What is the formula for R²?","options":["R² = 1 - [∑(y_i - ŷ_i)^2 / ∑(y_i - ȳ)^2]","R² = ∑(y_i - ŷ_i)^2 / ∑(y_i - ȳ)^2","R² = 1 - (MSE / Variance)","R² = ∑(y_i - ŷ_i) / n"],"answer":0},
+  {"question":"If a regression model yields R² = 0.80, what is the correct interpretation?","options":["The model explains approximately 80% of the variation in the target variable relative to the mean baseline","The model misclassifies 20% of all categorical records","The model has an average error of 80 units","Exactly 80% of features have non-zero coefficients"],"answer":0},
+  {"question":"In a binary confusion matrix, a \"True Positive\" (TP) occurs when:","options":["Actual class is Positive and Predicted class is Positive","Actual class is Negative and Predicted class is Positive","Actual class is Positive and Predicted class is Negative","Actual class is Negative and Predicted class is Negative"],"answer":0},
+  {"question":"In fraud detection, predicting that a normal transaction is fraudulent is a:","options":["True Negative","False Positive (Type I error)","False Negative (Type II error)","True Positive"],"answer":1},
+  {"question":"A False Negative (Type II error) occurs when:","options":["Actual class is Positive but the model predicts Negative","Actual class is Negative and the model predicts Negative","Actual class is Negative but the model predicts Positive","Actual class is Positive and the model predicts Positive"],"answer":0},
+  {"question":"What is the mathematical formula for Classification Accuracy?","options":["Accuracy = (TP + TN) / (TP + TN + FP + FN)","Accuracy = TP / (TP + FP)","Accuracy = TP / (TP + FN)","Accuracy = TN / (TN + FP)"],"answer":0},
+  {"question":"What is the mathematical formula for Precision?","options":["Precision = TP / (TP + FP)","Precision = TP / (TP + FN)","Precision = (TP + TN) / Total","Precision = FP / (TP + FP)"],"answer":0},
+  {"question":"What question does Precision fundamentally answer?","options":["Of all cases the model predicted as positive, what fraction was actually positive?","Of all actual positive cases in the dataset, how many did the model find?","What percentage of negative cases were correctly identified?","What is the average squared error of positive predictions?"],"answer":0},
+  {"question":"What is the mathematical formula for Recall (Sensitivity)?","options":["Recall = TP / (TP + FN)","Recall = TP / (TP + FP)","Recall = TN / (TN + FP)","Recall = (TP + FP) / Total"],"answer":0},
+  {"question":"What question does Recall fundamentally answer?","options":["Of all actual positive cases in existence, how many did the model successfully capture?","Of all positive predictions, how many were incorrect?","How fast does the model converge during gradient descent?","What is the ratio of true negatives to false positives?"],"answer":0},
+  {"question":"Why is Recall prioritized over Precision in life-threatening medical diagnoses (e.g., cancer detection)?","options":["Missing an actual positive case (False Negative) has severe, life-threatening consequences","False Positives cause permanent hardware failure","High recall guarantees zero data preprocessing requirements","Cancer screening datasets never have class imbalance"],"answer":0},
+  {"question":"In an email spam filter, why is high Precision especially important?","options":["Blocking a legitimate, important email (False Positive) causes significant inconvenience to the user","Spam emails cannot be classified using decision trees","It prevents the email client from consuming bandwidth","Precision eliminates the need for an inbox folder"],"answer":0},
+  {"question":"What is the formal definition of the F1-Score?","options":["The arithmetic mean of precision and recall","The harmonic mean of precision and recall: F1 = 2 * (Precision * Recall) / (Precision + Recall)","The geometric difference between accuracy and error rate","The ratio of true positives to false negatives"],"answer":1},
+  {"question":"Why is the harmonic mean used for F1-score instead of the simple arithmetic mean?","options":["It heavily penalizes extreme imbalances where one metric is high and the other is near zero","It converts classification metrics into continuous regression metrics","It guarantees an F1-score greater than 1.0","It allows the calculation of negative values"],"answer":0},
+  {"question":"If a model has Precision = 1.0 and Recall = 0.0, what is its F1-Score?","options":["0.5","0.0","1.0","0.25"],"answer":1},
+  {"question":"What is the fundamental difference between model Parameters and Hyperparameters?","options":["Parameters are learned automatically from training data; Hyperparameters are set beforehand by the practitioner","Parameters are set by the engineer; Hyperparameters are computed by gradient descent","Parameters only exist in classification; Hyperparameters only exist in regression","Parameters are evaluation metrics; Hyperparameters are data cleaning steps"],"answer":0},
+  {"question":"Which of the following is a hyperparameter for a Decision Tree?","options":["Maximum depth (max_depth) and minimum samples per split","The learned β1 slope coefficient","The calculated prediction residuals","The mean squared error on the test set"],"answer":0},
+  {"question":"How does Grid Search perform hyperparameter tuning?","options":["By exhaustively training and evaluating models on every specified parameter combination using cross-validation","By selecting hyperparameter values completely at random without replacement","By eliminating features with low correlation coefficients","By fitting a straight line through the validation set"],"answer":0},
+  {"question":"What is the main operational advantage of Random Search over Grid Search?","options":["It evaluates every possible mathematical permutation in existence","It samples parameter combinations randomly, often finding strong configurations much faster when search spaces are large","It completely guarantees finding the global optimal parameter set","It eliminates the need for cross-validation"],"answer":1},
+  {"question":"What is the definition of Overfitting in predictive modeling?","options":["When a model is too simple to capture underlying data patterns","When a model learns the training data and noise too closely, failing to generalize to unseen data","When training and testing errors are both equally low","When a dataset contains more features than observations"],"answer":1},
+  {"question":"A model with 99% training accuracy but 72% testing accuracy is exhibiting:","options":["Underfitting","Overfitting (High Variance)","High Bias","Perfect generalization"],"answer":1},
+  {"question":"Which of the following is a common cause of overfitting?","options":["An overly complex model, excessive features, noisy data, or excessively deep decision trees","Applying too much regularization to model parameters","Using an overly simple linear equation for complex non-linear data","Having an excessively large training dataset"],"answer":0},
+  {"question":"Which of the following is an effective remedy for overfitting?","options":["Increasing model depth and complexity","Simplifying the model, applying regularization, pruning trees, and collecting more data","Disabling cross-validation during training","Removing all validation data"],"answer":1},
+  {"question":"What is the definition of Underfitting?","options":["When a model learns training data noise perfectly","When a model is too simple to capture the underlying patterns in the data, performing poorly on both training and testing sets","When testing accuracy is significantly higher than training accuracy","When a model achieves zero error on validation folds"],"answer":1},
+  {"question":"A model displaying 65% training accuracy and 63% test accuracy on a straightforward task is suffering from:","options":["Underfitting (High Bias)","Overfitting (High Variance)","Data leakage","Multicollinearity"],"answer":0},
+  {"question":"Which of the following approaches helps resolve underfitting?","options":["Increasing model complexity, adding informative features, and reducing excessive regularization","Pruning decision trees to depth 1","Removing 50% of the training features","Increasing L1/L2 penalty parameters to infinity"],"answer":0},
+  {"question":"In the bias-variance trade-off, what does \"Bias\" represent?","options":["The error introduced by overly simplistic assumptions in the learning algorithm","The model's sensitivity to random fluctuations in the training dataset","The time required to complete one training epoch","The number of leaf nodes in a random forest"],"answer":0},
+  {"question":"In the bias-variance trade-off, what does \"Variance\" represent?","options":["How much the model's predictions fluctuate when trained on different samples of data","The systematic error caused by overly simple model assumptions","The absolute magnitude of the learning rate parameter","The percentage of missing values in the target column"],"answer":0},
+  {"question":"What is the relationship between model complexity, bias, and variance?","options":["Complex models have High Bias and Low Variance; Simple models have Low Bias and High Variance","Simple models have High Bias and Low Variance; Complex models have Low Bias and High Variance","Bias and variance both decrease to zero as model complexity reaches infinity","Model complexity has no mathematical relationship with bias or variance"],"answer":1},
+  {"question":"What does \"Irreducible Error\" represent in predictive modeling?","options":["Flaws in Python programming syntax","Inherent noise, unmeasured variables, and randomness in the real-world system that no model can eliminate","Errors caused exclusively by missing median imputation","The difference between grid search and random search runtime"],"answer":1},
+  {"question":"What does model interpretation mean?","options":["Translating model code from Python to Java","Understanding how a predictive model produces its predictions and which features influence those predictions","Printing the raw memory address of model weights","Visualizing bar plots of raw CSV datasets"],"answer":1},
+  {"question":"In the linear regression model Salary = 20000 + 5000(YearsExperience), what does the coefficient 5000 signify?","options":["For each additional year of experience, predicted salary increases by ₹5,000, assuming other variables remain constant","The starting salary of an employee with zero experience is ₹5,000","The maximum possible salary cap is ₹5,000","The model error is exactly ₹5,000 for every prediction"],"answer":0},
+  {"question":"In Logistic Regression, how does a positive coefficient for an independent feature affect the outcome?","options":["It increases the log-odds of the positive target class as the feature value increases","It sets the predicted probability strictly to 0","It forces the decision boundary to become non-linear","It decreases the odds ratio below zero"],"answer":0},
+  {"question":"Why are single Decision Trees considered highly interpretable models?","options":["Their hierarchical if-then decision rules can be easily visualized and traced from root to leaf","They consist of thousands of blended polynomial formulas","They contain no hyperparameters to tune","They produce continuous smooth linear planes"],"answer":0},
+  {"question":"What information does \"Feature Importance\" provide in ensemble models like Random Forest?","options":["The relative contribution or predictive power of each feature in making model predictions","Definitive mathematical proof that a feature causes the target outcome","The exact number of missing values in each feature","The time taken to load each column into RAM"],"answer":0},
+  {"question":"What does an ROC (Receiver Operating Characteristic) curve plot?","options":["True Positive Rate (TPR) against False Positive Rate (FPR) across various classification thresholds","Mean Squared Error against tree depth","Precision against Recall for regression models","Training error against test error across epochs"],"answer":0},
+  {"question":"What does AUC stand for in the context of the ROC curve?","options":["Area Under the Curve","Automated Unit Calibration","Accurate Universal Classification","Absolute Unbiased Correlation"],"answer":0},
+  {"question":"Why is a Precision-Recall (PR) curve often preferred over an ROC curve for heavily imbalanced datasets?","options":["It focuses directly on the minority positive class without being inflated by a large number of True Negatives","It runs faster on GPUs","It eliminates the need to calculate True Positives","It can only be plotted for regression tasks"],"answer":0},
+  {"question":"In an e-commerce purchase prediction pipeline where target Purchased is 10% and Not Purchased is 90%, what type of problem is this?","options":["Continuous regression problem","Imbalanced binary classification problem","Unsupervised clustering problem","Ordinal ranking problem"],"answer":1},
+  {"question":"When splitting an imbalanced classification dataset into train and test sets, why is stratified splitting recommended?","options":["It preserves the original class proportion percentages in both the training and testing sets","It converts all categorical variables into numeric floats","It scales continuous features between 0 and 1","It removes all outliers automatically"],"answer":0},
+  {"question":"If an e-commerce model outputs a probability of P(Purchase) = 0.82 for a customer, this means:","options":["The model predicts an 82% likelihood that the customer will make a purchase","The customer will purchase exactly 82 products","The model has an error rate of 82% on this customer","82% of features had missing values"],"answer":0},
+  {"question":"Why does achieving near 100% accuracy on the training set not guarantee a successful predictive model?","options":["The model may have simply memorized the training data (overfitted) and may fail to generalize to unseen real-world data","100% accuracy causes memory overflow during prediction","Training accuracy is always mathematically inverted on test data","High training accuracy violates the central limit theorem"],"answer":0},
+  {"question":"Which algorithm builds independent trees in parallel using bootstrap samples and random feature subsets?","options":["Random Forest","Gradient Boosting","Linear Regression","Logistic Regression"],"answer":0},
+  {"question":"Which algorithm trains trees sequentially, with each subsequent tree aiming to minimize the residual errors of the previous trees?","options":["Gradient Boosting","Random Forest","Decision Tree","Ordinary Least Squares"],"answer":0}
+]
+</script>
+
+<script>
+const quiz = JSON.parse(document.getElementById('quiz-data').textContent);
+const total = quiz.length;
+document.getElementById('metaTotal').textContent = total;
+document.getElementById('statTotal').textContent = total;
+
+const STORAGE_KEY = 'mock_test_user_answers_part2';
+let savedAnswers = null;
+try {
+  savedAnswers = JSON.parse(localStorage.getItem(STORAGE_KEY));
+} catch(e) {}
+
+// userAnswers[qi] stores the INDEX into the ORIGINAL options array (i.e. the answer value 0-3)
+const userAnswers = (Array.isArray(savedAnswers) && savedAnswers.length === total)
+  ? savedAnswers
+  : new Array(total).fill(null);
+
+// quizOrder[displayIndex] = originalQuizIndex
+let quizOrder = quiz.map((_, i) => i);
+// optionOrders[originalQuizIndex][displayOptionIndex] = originalOptionIndex
+let optionOrders = quiz.map(q => q.options.map((_, i) => i));
+
+function shuffle(arr){
+  for(let i = arr.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function applyShuffleOrders(){
+  shuffle(quizOrder);
+  optionOrders = quiz.map(q => shuffle(q.options.map((_, i) => i)));
+}
+
+function saveState(){
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(userAnswers));
+  } catch(e) {}
+}
+
+function escapeHtml(str){
+  if(!str) return '';
+  return str.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function renderQuiz(){
+  const container = document.getElementById('quizContainer');
+  const frag = document.createDocumentFragment();
+  const letters = ['A','B','C','D'];
+
+  quizOrder.forEach((originalQi, displayQi) => {
+    const q = quiz[originalQi];
+    const card = document.createElement('div');
+    card.className = 'qcard';
+    // data-original-qi links display card back to its original question index
+    card.id = 'q-' + originalQi;
+    card.dataset.originalQi = originalQi;
+
+    let optsHtml = '';
+    optionOrders[originalQi].forEach((originalOi, displayOi) => {
+      const opt = q.options[originalOi];
+      const isSelected = userAnswers[originalQi] === originalOi;
+      optsHtml += `
+        <label class="option ${isSelected ? 'selected' : ''}" data-original-qi="${originalQi}" data-original-oi="${originalOi}">
+          <input type="radio" name="q${originalQi}" value="${originalOi}" ${isSelected ? 'checked' : ''}>
+          <span><b>${letters[displayOi]}.</b> ${escapeHtml(opt)}</span>
+        </label>`;
+    });
+
+    card.innerHTML = `
+      <div class="qnum">QUESTION ${displayQi+1} OF ${total}</div>
+      <p class="qtext">${escapeHtml(q.question)}</p>
+      <div class="options">${optsHtml}</div>
+    `;
+    frag.appendChild(card);
+  });
+  container.innerHTML = '';
+  container.appendChild(frag);
+}
+
+// Single delegated click handler — registered only ONCE, outside renderQuiz
+const container = document.getElementById('quizContainer');
+container.addEventListener('click', (e) => {
+  // Clicking a <label> fires TWO clicks: one on the label, one synthetic on its <input>.
+  // Ignore the input-originated event to prevent double-toggling (select → deselect instantly).
+  if(e.target.tagName === 'INPUT') return;
+  const label = e.target.closest('.option');
+  if(!label) return;
+  const originalQi = parseInt(label.dataset.originalQi);
+  const originalOi = parseInt(label.dataset.originalOi);
+  const card = document.getElementById('q-' + originalQi);
+
+  if (userAnswers[originalQi] === originalOi) {
+    // Click on already-selected option → deselect
+    userAnswers[originalQi] = null;
+    label.classList.remove('selected');
+    const input = label.querySelector('input');
+    if(input) input.checked = false;
+  } else {
+    // Select new option, clear others in this card
+    userAnswers[originalQi] = originalOi;
+    card.querySelectorAll('.option').forEach(o => {
+      o.classList.remove('selected');
+      const inp = o.querySelector('input');
+      if(inp) inp.checked = false;
+    });
+    label.classList.add('selected');
+    const input = label.querySelector('input');
+    if(input) input.checked = true;
+  }
+  saveState();
+  updateProgress();
+});
+
+function updateProgress(){
+  const answered = userAnswers.filter(a => a !== null).length;
+  document.getElementById('progressFill').style.width = (answered/total*100) + '%';
+  document.getElementById('progressLabel').textContent = `${answered} / ${total} answered`;
+}
+
+function computeResults(){
+  let correct = 0, wrong = 0, skip = 0;
+  const rows = quiz.map((q, qi) => {
+    const ua = userAnswers[qi];
+    let status;
+    if(ua === null){ status = 'skip'; skip++; }
+    else if(ua === q.answer){ status = 'correct'; correct++; }
+    else { status = 'wrong'; wrong++; }
+    return { qi, q, ua, status };
+  });
+  return { rows, correct, wrong, skip };
+}
+
+let currentFilter = 'all';
+let lastResults = null;
+
+function renderResults(){
+  const { rows, correct, wrong, skip } = computeResults();
+  lastResults = rows;
+  const attempted = correct + wrong;
+  const percent = Math.round((correct/total)*1000)/10;
+  const accuracy = attempted > 0 ? Math.round((correct/attempted)*1000)/10 : 0;
+
+  document.getElementById('scorePct').textContent = percent + '%';
+  document.getElementById('statMarks').textContent = `${correct} / ${total}`;
+  document.getElementById('statCorrect').textContent = correct;
+  document.getElementById('statWrong').textContent = wrong;
+  document.getElementById('statSkip').textContent = skip;
+  document.getElementById('statAttempted').textContent = attempted;
+  document.getElementById('statPercent').textContent = percent + '%';
+  document.getElementById('statAccuracy').textContent = accuracy + '%';
+  document.getElementById('cntWrong').textContent = '(' + wrong + ')';
+  document.getElementById('cntCorrect').textContent = '(' + correct + ')';
+  document.getElementById('cntSkip').textContent = '(' + skip + ')';
+
+  const ring = document.getElementById('scoreRing');
+  let ringColor = '#b23a2f';
+  if(percent >= 75) ringColor = '#2e7d5b';
+  else if(percent >= 45) ringColor = '#c9922f';
+  ring.style.borderColor = ringColor;
+
+  renderReviewList(rows);
+
+  document.getElementById('quizContainer').style.display = 'none';
+  document.getElementById('submitBar').style.display = 'none';
+  document.querySelector('.progress-bar-wrap').style.display = 'none';
+  document.getElementById('results').style.display = 'block';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function renderReviewList(rows){
+  const list = document.getElementById('reviewList');
+  const letters = ['A','B','C','D'];
+  const filtered = currentFilter === 'all' ? rows : rows.filter(r => r.status === currentFilter);
+  if(filtered.length === 0){
+    list.innerHTML = `<p style="text-align:center;color:var(--ink-soft);font-family:var(--mono);font-size:13px;padding:24px 0;">Nothing here.</p>`;
+    return;
+  }
+  list.innerHTML = filtered.map(r => {
+    const { qi, q, ua, status } = r;
+    let body = '';
+    if(status === 'correct'){
+      body = `<div class="review-line your-correct"><span class="tag">YOUR ANSWER</span>${letters[ua]}. ${escapeHtml(q.options[ua])} ✓</div>`;
+    } else if(status === 'wrong'){
+      body = `
+        <div class="review-line your-wrong"><span class="tag">YOUR ANSWER</span>${letters[ua]}. ${escapeHtml(q.options[ua])} ✕</div>
+        <div class="review-line correct-answer"><span class="tag">CORRECT ANSWER</span>${letters[q.answer]}. ${escapeHtml(q.options[q.answer])}</div>
+      `;
+    } else {
+      body = `
+        <div class="review-line" style="background:var(--skip-soft);color:var(--skip);"><span class="tag">YOUR ANSWER</span>Not attempted</div>
+        <div class="review-line correct-answer"><span class="tag">CORRECT ANSWER</span>${letters[q.answer]}. ${escapeHtml(q.options[q.answer])}</div>
+      `;
+    }
+    return `
+      <div class="review-card is-${status}">
+        <div class="review-head">
+          <div class="review-qnum">QUESTION ${qi+1}</div>
+          <div class="badge is-${status}">${status}</div>
+        </div>
+        <p class="review-q">${escapeHtml(q.question)}</p>
+        ${body}
+      </div>
+    `;
+  }).join('');
+}
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = btn.dataset.filter;
+    renderReviewList(lastResults);
+  });
+});
+
+document.getElementById('submitBtn').addEventListener('click', () => {
+  const unanswered = userAnswers.filter(a => a === null).length;
+  if(unanswered > 0){
+    const proceed = confirm(`You have ${unanswered} unanswered question(s). Submit anyway?`);
+    if(!proceed) return;
+  }
+  renderResults();
+});
+
+document.getElementById('retakeBtn').addEventListener('click', () => {
+  userAnswers.fill(null);
+  saveState();
+  applyShuffleOrders();
+  renderQuiz();
+  updateProgress();
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('quizContainer').style.display = 'block';
+  document.getElementById('submitBar').style.display = 'flex';
+  document.querySelector('.progress-bar-wrap').style.display = 'block';
+  window.scrollTo({top:0, behavior:'smooth'});
+});
+
+document.getElementById('shuffleBtn').addEventListener('click', () => {
+  if(!confirm('Shuffle will reset all your current answers and randomize the question and option order. Continue?')) return;
+  userAnswers.fill(null);
+  saveState();
+  applyShuffleOrders();
+  renderQuiz();
+  updateProgress();
+  window.scrollTo({top:0, behavior:'smooth'});
+});
+
+renderQuiz();
+updateProgress();
+</script>
+</body>
+</html>
